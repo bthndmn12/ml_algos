@@ -53,15 +53,15 @@ void destroy_model(LinearRegression* model) {
 // }
 float cost_function(LinearRegression* lr, float* predictions, float* targets, int size) {
     if (size == 0) {
-        return 0.0; // Handle empty dataset
+        return 0.0; 
     }
 
     float error = 0.0;
     for (int i = 0; i < size; i++) {
-        // Scale data if needed (e.g., divide by FLT_MAX)
+        
         float scaled_prediction = predictions[i] / FLT_MAX;
         float scaled_target = targets[i] / FLT_MAX;
-        // Use fma for squaring (if available)
+        
         error += fma(scaled_prediction - scaled_target, scaled_prediction - scaled_target, error); 
     }
 
@@ -81,13 +81,13 @@ void forward_propagation(LinearRegression* lr, float* predictions, int size) {
 
 void update_weights(LinearRegression* lr, float* predictions, float* targets, int size) {
     if (size == 0) {
-        return; // Handle empty dataset
+        return; 
     }
 
     float* gradients = (float*)calloc(lr->input_size, sizeof(float));
     float bias_gradient = 0.0;
 
-    // Check for zero train_inputs (if applicable)
+    
     bool all_inputs_zero = true; 
     for (int i = 0; i < size * lr->input_size; i++) {
         if (lr->train_inputs[i] != 0.0) {
@@ -97,7 +97,7 @@ void update_weights(LinearRegression* lr, float* predictions, float* targets, in
     }
 
     if (all_inputs_zero) {
-        // Handle the case where all inputs are zero (e.g., print an error)
+    
         fprintf(stderr, "Error: All training inputs are zero, cannot update weights.\n");
         return; 
     }
@@ -137,7 +137,7 @@ void update_weights(LinearRegression* lr, float* predictions, float* targets, in
 void train(LinearRegression* lr, Data* data, int epochs, float learning_rate) {
     lr->learning_rate = learning_rate;
     
-    time_t start_time = time(NULL);  // Get the starting time
+    time_t start_time = time(NULL);  
     
     for (int epoch = 0; epoch < epochs; epoch++) {
         float* predictions = (float*)malloc(data->train_size * sizeof(float));
@@ -151,7 +151,6 @@ void train(LinearRegression* lr, Data* data, int epochs, float learning_rate) {
 
         free(predictions);
 
-        // Print progress every 5 epochs
         if ((epoch + 1) % 5 == 0) {
             time_t current_time = time(NULL);
             printf("Epoch: %d, Time Elapsed: %ld seconds\n", epoch + 1, current_time - start_time);
@@ -195,7 +194,6 @@ float accuracy(LinearRegression* lr, Data* data) {
     return 1 - (cost / variance);
 }
 
-// Load the data from a CSV file
 Data* load_data(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -238,7 +236,6 @@ Data* load_data(const char* filename) {
     return data;
 }
 
-// Free the memory allocated for the data
 void free_data(Data* data) {
     free(data->train_x);
     free(data->train_y);
@@ -248,28 +245,21 @@ void free_data(Data* data) {
 }
 
 int main() {
-    // Load the data from the CSV file
     Data* data = load_data("data_for_lr.csv");
 
-    // Create a LinearRegression model
     LinearRegression* model = create_model(1);
 
-    // Set the training data for the model
     model->train_inputs = data->train_x;
     model->train_outputs = data->train_y;
 
-    // Train the model
     train(model, data, EPOCHS, LEARNING_RATE);
 
-    // Calculate the accuracy of the model
     float accuracy_score = accuracy(model, data);
     printf("Accuracy: %f\n", accuracy_score);
 
-    // Make a prediction using the model
     float prediction = predict(model, 24.0);
     printf("Predicted value: %f\n", prediction);
 
-    // Free the memory allocated for the model and data
     destroy_model(model);
     free_data(data);
 

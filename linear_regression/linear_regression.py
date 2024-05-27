@@ -1,27 +1,20 @@
-
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+
+import matplotlib.pyplot as plt
 
 
 class DataLoader():
     def load_data(self, url):
-        # Load the dataset
-
         data = pd.read_csv(url)
-
-        # Drop the missing values
         data = data.dropna()
-
         return data
 
     def split_data(self, data, train_ratio=0.8):
-        # Split the data into training and testing sets
         train_size = int(len(data) * train_ratio)
         train_data = data[:train_size]
         test_data = data[train_size:]
-
         return train_data, test_data
 
 class LinearRegression():
@@ -29,35 +22,20 @@ class LinearRegression():
         self.train_inputs = train_inputs
         self.train_outputs = train_outputs
         self.weights = np.zeros((train_inputs.shape[1], 1))
-        
         self.bias = 0
         self.loss = []
 
     def cost_func(self, prediction, train_output):
-        # Calculate the cost
         return np.mean((prediction - train_output) ** 2)
 
     def forward_propagation(self):
-        # Forward propagation
         return np.dot(self.train_inputs, self.weights) + self.bias
 
     def update_weights(self, prediction, train_output, learning_rate):
-        # Update the weights
-        print("train_inputs.T shape: ", self.train_inputs.T.shape)
-        print("prediction shape: ", prediction.shape)
-        print("train_output shape: ", train_output.shape)
-        print("prediction-train_output shape: ", (prediction - train_output).shape)
-        print("train_inputs shape: ", self.train_inputs.shape[0])
-
-        
         prediction = prediction.reshape(-1, 1)
         train_output = train_output.reshape(-1, 1)
-
-        # Calculate the gradients
         gradient_weights = np.dot(self.train_inputs.T, (prediction - train_output)) / self.train_inputs.shape[0]
         gradient_bias = np.mean(prediction - train_output)
-
-        # Update weights and bias
         self.weights -= learning_rate * gradient_weights
         self.bias -= learning_rate * gradient_bias
 
@@ -70,7 +48,6 @@ class LinearRegression():
             prediction = self.forward_propagation()
             cost = self.cost_func(prediction, self.train_outputs)
             self.update_weights(prediction, self.train_outputs, learning_rate)
-            print("w, b, c: ", self.weights, self.bias, cost)
             self.loss.append(cost)
             line.set_ydata(prediction)
             return line,
@@ -88,36 +65,25 @@ class LinearRegression():
         
 
     def predict(self, test_input):
-        # Predict the output
         return np.dot(test_input, self.weights) + self.bias
 
     def accuracy(self, test_input, test_output):
-        # Calculate the accuracy
         prediction = self.predict(test_input)
         return 1 - self.cost_func(prediction, test_output) / np.mean(test_output ** 2)
 
-# Load and process the data
 data_loader = DataLoader()
 data = data_loader.load_data("../datasets/data_for_lr.csv")
 
-# training dataset and labels
 train_input = np.array(data['x'][0:500]).reshape(500, 1)
 train_output = np.array(data['y'][0:500]).reshape(500, 1)
 
-# valid dataset and labels
 test_input = np.array(data['x'][500:700]).reshape(199, 1)
 test_output = np.array(data['y'][500:700]).reshape(199, 1)
-
-# Create and train the model
 
 model = LinearRegression(train_input, train_output)
 parameters, bias, loss = model.train(learning_rate=0.0001, iters=50)
 
-
-# Evaluate the model
 accuracy = model.accuracy(test_input, test_output)
-
-
 
 print(f'Accuracy: {accuracy}')
 print(f'Predicted value: {model.predict(24.0)}')
