@@ -43,6 +43,8 @@ class PolyRegression():
     #     # Add bias term
     #     transformed_inputs = np.concatenate((np.ones((transformed_inputs.shape[0], 1)), transformed_inputs), axis=1)
     #     return transformed_inputs
+
+    # used transform and normalize function from here https://www.geeksforgeeks.org/polynomial-regression-from-scratch-using-python/?ref=lbp
     def transform_inputs(self, X):
         # initialize X_transform
         X_transform = np.ones((X.shape[0], 1))
@@ -79,7 +81,6 @@ class PolyRegression():
         # transformed_inputs = self.transform_inputs(self.train_inputs)
         # normalized_inputs = self.normalize_inputs(transformed_inputs)
 
-        # Calculate the gradients
         gradient_weights = np.dot(normalized_inputs.T, (prediction - train_output)) / normalized_inputs.shape[0]
         gradient_bias = np.mean(prediction - train_output)
 
