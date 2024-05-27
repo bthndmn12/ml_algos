@@ -37,7 +37,12 @@ def test_synthetic_data():
     data = SyntheticData(SyntheticData.DataType.LOGARITHMIC, 1000, 0.3,10)
     print("Logarithmic data shape:", data.data.head())
     assert data.data.shape == (1000, 2)
-    plt.scatter(data.data.iloc[:, 0], data.data.iloc[:, 1], label="Logarithmic")
+    #plt.scatter(data.data.iloc[:, 0], data.data.iloc[:, 1], label="Logarithmic")
+
+    data = SyntheticData(SyntheticData.DataType.LOGISTIC, 100, 0.1, category=3)
+    print("Logistic data shape:", data.data.head())
+    assert data.data.shape == (100, 3)
+    plt.scatter(data.data.iloc[:, 0], data.data.iloc[:, 1], label="Logistic")
 
     plt.legend()
     plt.show()

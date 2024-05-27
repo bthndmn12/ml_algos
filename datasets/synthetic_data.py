@@ -13,8 +13,9 @@ class SyntheticData():
         ABSOLUTE = 5
         EXPONENTIAL = 6
         LOGARITHMIC = 7
+        LOGISTIC = 8
     
-    def __init__(self, data_type, num_points, noise=0, space = 1):
+    def __init__(self, data_type, num_points, noise=0, space = 1, category = 2):
         if not isinstance(data_type, SyntheticData.DataType):
             raise ValueError("Invalid data type")
         self.data_type = data_type
@@ -22,6 +23,7 @@ class SyntheticData():
         self.noise = noise
         self.space = space
         self.data = None
+        self.category = category
         self.generate_data()
 
     
@@ -40,6 +42,8 @@ class SyntheticData():
             self.data = self.generate_exponential_data()
         elif self.data_type == self.DataType.LOGARITHMIC:
             self.data = self.generate_logarithmic_data()
+        elif self.data_type == self.DataType.LOGISTIC:
+            self.data = self.generate_logistic_data()
 
     def generate_linear_data(self):
         x = np.linspace(0, self.space, self.num_points)
@@ -74,4 +78,9 @@ class SyntheticData():
     def generate_logarithmic_data(self):
         x = np.linspace(0.1, self.space, self.num_points)
         y = -np.log(x) + np.random.normal(0, self.noise, self.num_points)
+        return pd.DataFrame({'x': x, 'y': y})
+    
+    def generate_logistic_data(self):
+        x = np.linspace(-1*self.space, self.space, self.num_points)
+        y = 1 / (1 + np.exp(-x)) + np.random.normal(0, self.noise, self.num_points)
         return pd.DataFrame({'x': x, 'y': y})
