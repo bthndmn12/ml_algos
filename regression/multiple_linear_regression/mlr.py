@@ -42,7 +42,7 @@ class LinearRegression:
                 cost = self.cost_func(prediction, self.train_outputs)
                 self.update_weights(prediction, self.train_outputs, learning_rate)
                 self.loss.append(cost)
-                print(f"Iteration {i}: w={self.weights.flatten()}, b={self.bias}, cost={cost}")
+                # print(f"Iteration {i}: w={self.weights.flatten()}, b={self.bias}, cost={cost}")
                 line.set_ydata(self.forward_propagation())
                 return [line]
 
@@ -65,7 +65,9 @@ class LinearRegression:
                 cost = self.cost_func(prediction, self.train_outputs)
                 self.update_weights(prediction, self.train_outputs, learning_rate)
                 self.loss.append(cost)
-                print(f"Iteration {i}: w={self.weights.flatten()}, b={self.bias}, cost={cost}")
+                # print(f"Iteration {i}: w={self.weights.flatten()}, b={self.bias}, cost={cost}")
+                if i % 10 == 0:
+                    print(f"Iteration {i}, cost={cost}")    
                 line.set_data(range(len(self.loss)), self.loss)
                 return [line]
 
@@ -87,29 +89,29 @@ class LinearRegression:
         prediction = self.predict(test_input)
         return 1 - self.cost_func(prediction, test_output) / np.mean(test_output ** 2)
 
-data = pd.read_csv('../datasets/Student_Performance.csv')
+# data = pd.read_csv('../datasets/Student_Performance.csv')
 
-train_size = 500
-test_size = 199
+# train_size = 500
+# test_size = 199
 
-data['Extracurricular Activities'] = data['Extracurricular Activities'].map({'Yes': 1, 'No': 0})
-train_input = np.array(data[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced']][:train_size]).reshape(train_size, 5)
-train_output = np.array(data['Performance Index'][:train_size]).reshape(train_size, 1)
+# data['Extracurricular Activities'] = data['Extracurricular Activities'].map({'Yes': 1, 'No': 0})
+# train_input = np.array(data[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced']][:train_size]).reshape(train_size, 5)
+# train_output = np.array(data['Performance Index'][:train_size]).reshape(train_size, 1)
 
-print("Train input shape:", train_input.shape)
-print("Train output shape:", train_output.shape)
+# print("Train input shape:", train_input.shape)
+# print("Train output shape:", train_output.shape)
 
-test_input = np.array(data[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced']][train_size:train_size+test_size]).reshape(test_size, 5)
-test_output = np.array(data['Performance Index'][train_size:train_size+test_size]).reshape(test_size, 1)
+# test_input = np.array(data[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced']][train_size:train_size+test_size]).reshape(test_size, 5)
+# test_output = np.array(data['Performance Index'][train_size:train_size+test_size]).reshape(test_size, 1)
 
-print("Test input shape:", test_input.shape)
-print("Test output shape:", test_output.shape)
+# print("Test input shape:", test_input.shape)
+# print("Test output shape:", test_output.shape)
 
-model = LinearRegression(train_input, train_output)
-parameters, bias, loss = model.train(learning_rate=0.0001, iters=50)
+# model = LinearRegression(train_input, train_output)
+# parameters, bias, loss = model.train(learning_rate=0.0001, iters=50)
 
-accuracy = model.accuracy(test_input, test_output)
+# accuracy = model.accuracy(test_input, test_output)
 
 
 
-print(f'Accuracy: {accuracy}')
+# print(f'Accuracy: {accuracy}')
