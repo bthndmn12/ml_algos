@@ -16,7 +16,7 @@ class DataLoader():
         test_data = data[train_size:]
         return train_data, test_data
 
-class KNNClassifier():
+class NCD_Classifier():
     def __init__(self, k):
         self.k = k
 
@@ -63,7 +63,7 @@ test_output = np.array(data['Purchased'][300:400]).reshape(100, 1)
 train_set = [(train_input_strings[i], str(train_output[i][0])) for i in range(len(train_input))]
 test_set = [(test_input_strings[i], str(test_output[i][0])) for i in range(len(test_input))]
 
-knn = KNNClassifier(k=3)
+knn = NCD_Classifier(k=3)
 predicted_classes = knn.predict_class(test_set, train_set)
 print(predicted_classes)
 

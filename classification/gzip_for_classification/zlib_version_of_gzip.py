@@ -2,6 +2,7 @@ import zlib
 import numpy as np
 import pandas as pd
 import datasets
+
 class DataLoader():
     def load_data(self, url):
         
@@ -14,6 +15,8 @@ class DataLoader():
         train_data = data[:train_size]
         test_data = data[train_size:]
         return train_data, test_data
+    
+
 class NCD_Classifier:
     def __init__(self, k=3):
         self.k = k
